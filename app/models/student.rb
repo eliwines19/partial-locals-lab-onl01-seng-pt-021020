@@ -13,12 +13,14 @@
 class Student < ActiveRecord::Base
   has_many :classroom_students
   has_many :classrooms, through: :classroom_students
-
+  
   def self.search(name)
-    if name.present?
-      where('NAME like ?', "%#{name}%")
+    if name == ''
+      self.all
     else
-      Student.all
+      self.all.select do |s|
+        s.name.downcase.include?(name)
+      end
     end
   end
 
